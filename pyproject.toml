@@ -1,0 +1,41 @@
+[build-system]
+requires = [
+  "alembic",
+  "asyncpg",
+  "cryptography",
+  "dotenv",
+  "fastapi",
+  "pydantic",
+  "pyjwt",
+  "python-helpers@git+https://github.com/MrFrangipane/python-helpers",
+  "requests",
+  "setuptools",
+  "sqlalchemy[asyncio]",
+  "uvicorn",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "queltalentapi"
+description = "Python API for Quel Talent ! webapp"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {file = "LICENSE"}
+authors = [
+  { name = "Frangitron", email = "contact@frangitron.com" }
+]
+maintainers = [
+  { name = "Frangitron", email = "contact@frangitron.com" }
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Programming Language :: Python :: 3 :: Only",
+]
+keywords = ["python", "frangitron", "api"]
+dynamic = ["version"]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.hatch.metadata]
+allow-direct-references = true
