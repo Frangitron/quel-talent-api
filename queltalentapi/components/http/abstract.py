@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
+from typing import Type
 
-from queltalentapi.components.http.user_claims import UserClaims
+from queltalentapi.components.http.abstract_route import AbstractHttpRoute
 
 
 class AbstractHttp(ABC):
@@ -10,5 +11,5 @@ class AbstractHttp(ABC):
         pass
 
     @abstractmethod
-    def register_route(self, path:str , method:str, callback: callable):
+    def register_route(self, route_type: Type[AbstractHttpRoute]):
         pass

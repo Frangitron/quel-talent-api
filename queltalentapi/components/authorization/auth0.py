@@ -19,7 +19,7 @@ class Auth0Authorization(AbstractAuthorization):
             f"https://{os.getenv('AUTH_DOMAIN')}/{os.getenv('AUTH_JWKS_ENDPOINT')}"
         ).json()['keys']
 
-    def validate_token(self, token: str | None) -> UserClaims:
+    def get_user_claims(self, token: str | None) -> UserClaims:
         audience = os.getenv('AUTH_AUDIENCE')
         unverified_header = jwt.get_unverified_header(token)
         key_id = unverified_header.get("kid")

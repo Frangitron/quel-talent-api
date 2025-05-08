@@ -1,7 +1,8 @@
 import logging
 import os
+
 from inspect import signature, Parameter
-from typing import Annotated
+from typing import Annotated, Type
 
 from fastapi import FastAPI
 from fastapi.exceptions import HTTPException
@@ -10,6 +11,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from queltalentapi.components.authorization.abstract import AbstractAuthorization
 from queltalentapi.components.http.abstract import AbstractHttp
+from queltalentapi.components.http.abstract_route import AbstractHttpRoute
 from queltalentapi.components.http.user_claims import UserClaims
 from queltalentapi.foundation.injector import Injector
 
@@ -33,28 +35,31 @@ class FastApiHttp(AbstractHttp):
 
         self._auth = Injector().inject(AbstractAuthorization)
 
-    def register_route(self, path:str , method:str, callback: callable):
-        _logger.info(f"Registering HTTP route for path '{path}' and method '{method}'")
+    def register_route(self, route_type: Type[AbstractHttpRoute]):
+        details = route_type.get_details()
+        _logger.info(f"Registering HTTP route for path '{details.path}' and method '{details.method}'")
 
-        callback_parameters = dict(signature(callback).parameters)
-        callback_parameters['user_claims'] =  Parameter(
+        route = route_type()
+        async def endpoint_wrapper(user_claims: UserClaims = Depends(self._validate_token), **kwargs):
+            route.user_claims = user_claims
+            try:
+                return await route.endpoint(**kwargs)
+            except Exception as e:
+                raise HTTPException(status_code=500, detail=str(e))
+
+        parameters = dict(signature(route.callback).parameters)
+        parameters['user_claims'] = Parameter(
             'user_claims',
             Parameter.KEYWORD_ONLY,
             default=Depends(self._validate_token),
             annotation=UserClaims
         )
-
-        async def _route(
-            **kwargs,
-        ):
-            return await callback(**kwargs)
-
-        _route.__signature__.replace(parameters=list(callback_parameters.values()))
+        endpoint_wrapper.__signature__ = signature(endpoint_wrapper).replace(parameters=list(parameters.values()))
 
         self.get_app().add_api_route(
-            path=path,
-            endpoint=route,
-            methods=[method]
+            path=details.path,
+            endpoint=endpoint_wrapper,
+            methods=[details.method]
         )
 
     #
@@ -62,7 +67,7 @@ class FastApiHttp(AbstractHttp):
     def _validate_token(self, credentials: HTTPBearerAuthorizationCredentials) -> UserClaims:
         token = credentials.credentials if credentials else None
         try:
-            user_claims = self._auth.validate_token(token)
+            user_claims = self._auth.get_user_claims(token)
             return user_claims
         except Exception as e:
             raise HTTPException(status_code=401, detail=str(e))
