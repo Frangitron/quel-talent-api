@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from queltalentapi.components.http.user_claims import UserClaims
+from queltalentapi.foundation.http.user_claims import UserClaims
 
 
 class AbstractAuthorization(ABC):

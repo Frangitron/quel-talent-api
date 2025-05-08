@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Type
 
-from queltalentapi.components.http.abstract_route import AbstractHttpRoute
+from queltalentapi.foundation.http.abstract_route import AbstractHttpRoute
 
 
 class AbstractHttp(ABC):

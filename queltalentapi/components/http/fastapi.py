@@ -9,10 +9,10 @@ from fastapi.exceptions import HTTPException
 from fastapi.params import Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-from queltalentapi.components.authorization.abstract import AbstractAuthorization
-from queltalentapi.components.http.abstract import AbstractHttp
-from queltalentapi.components.http.abstract_route import AbstractHttpRoute
-from queltalentapi.components.http.user_claims import UserClaims
+from queltalentapi.foundation.authorization.abstract import AbstractAuthorization
+from queltalentapi.foundation.http.abstract import AbstractHttp
+from queltalentapi.foundation.http.abstract_route import AbstractHttpRoute
+from queltalentapi.foundation.http.user_claims import UserClaims
 from queltalentapi.foundation.injector import Injector
 
 

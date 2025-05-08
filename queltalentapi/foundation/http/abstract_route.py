@@ -1,8 +1,8 @@
 from abc import abstractmethod
 
-from queltalentapi.components.http.meta_route import MetaRoute
-from queltalentapi.components.http.route_details import RouteDetails
-from queltalentapi.components.http.user_claims import UserClaims
+from queltalentapi.foundation.http.meta_route import MetaRoute
+from queltalentapi.foundation.http.route_details import RouteDetails
+from queltalentapi.foundation.http.user_claims import UserClaims
 
 
 class AbstractHttpRoute(metaclass=MetaRoute):

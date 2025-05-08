@@ -1,5 +1,5 @@
-from queltalentapi.components.authorization.abstract import AbstractAuthorization
-from queltalentapi.components.http.user_claims import UserClaims
+from queltalentapi.foundation.authorization.abstract import AbstractAuthorization
+from queltalentapi.foundation.http.user_claims import UserClaims
 
 
 class NoAuthorization(AbstractAuthorization):

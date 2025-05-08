@@ -1,7 +1,7 @@
 import logging
 
-from queltalentapi.components.http.abstract import AbstractHttp
-from queltalentapi.components.http.meta_route import MetaRoute
+from queltalentapi.foundation.http.abstract import AbstractHttp
+from queltalentapi.foundation.http.meta_route import MetaRoute
 from queltalentapi.foundation.injector import Injector
 
 

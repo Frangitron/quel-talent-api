@@ -4,10 +4,10 @@ logging.basicConfig(level=logging.INFO)
 from dotenv import load_dotenv
 load_dotenv('resources/.env')
 
-from queltalentapi.components.authorization.abstract import AbstractAuthorization
 from queltalentapi.components.bootstrapper import Bootstrapper
-from queltalentapi.components.http.abstract import AbstractHttp
 from queltalentapi.domain.project.database.abstract import AbstractProjectDatabase
+from queltalentapi.foundation.authorization.abstract import AbstractAuthorization
+from queltalentapi.foundation.http.abstract import AbstractHttp
 from queltalentapi.foundation.injector import Injector
 
 
