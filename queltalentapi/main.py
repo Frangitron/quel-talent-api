@@ -8,7 +8,6 @@ from queltalentapi.components.authorization.abstract import AbstractAuthorizatio
 from queltalentapi.components.bootstrapper import Bootstrapper
 from queltalentapi.components.http.abstract import AbstractHttp
 from queltalentapi.domain.project.database.abstract import AbstractProjectDatabase
-from queltalentapi.foundation.domain_components_store import DomainComponentsStore
 from queltalentapi.foundation.injector import Injector
 
 
@@ -22,19 +21,15 @@ def _register_dependencies():
         AbstractAuthorization: NoAuthorization(),
         AbstractHttp: FastApiHttp(),
         AbstractProjectDatabase: AlembicProjectDatabase(),
-        DomainComponentsStore: DomainComponentsStore(),
     })
 
 
-def _register_domain_components():
-    from queltalentapi.domain.project.domain_component import ProjectDomainComponent
-
-    store = Injector().inject(DomainComponentsStore)
-    store.add(ProjectDomainComponent())
+def _import_routes():
+    from queltalentapi.domain.project import routes
 
 
 _register_dependencies()
-_register_domain_components()
+_import_routes()
 bootstrapper = Bootstrapper()
 bootstrapper.bootstrap()
 

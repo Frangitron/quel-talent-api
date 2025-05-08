@@ -24,6 +24,7 @@ HTTPBearerAuthorizationCredentials = Annotated[HTTPAuthorizationCredentials, Dep
 
 class FastApiHttp(AbstractHttp):
     def __init__(self):
+        super().__init__()
         self._app: FastAPI | None = None
         self._auth : AbstractAuthorization | None = None
 
@@ -36,11 +37,8 @@ class FastApiHttp(AbstractHttp):
         self._auth = Injector().inject(AbstractAuthorization)
 
     def register_route(self, route_type: Type[AbstractHttpRoute]):
-        details = route_type.get_details()
-        _logger.info(f"Registering HTTP route for path '{details.path}' and method '{details.method}'")
-
         route = route_type()
-        async def endpoint_wrapper(user_claims: UserClaims = Depends(self._validate_token), **kwargs):
+        async def endpoint_wrapper(user_claims: UserClaims = Depends(self._get_user_claims), **kwargs):
             route.user_claims = user_claims
             try:
                 return await route.endpoint(**kwargs)
@@ -51,29 +49,27 @@ class FastApiHttp(AbstractHttp):
         parameters['user_claims'] = Parameter(
             'user_claims',
             Parameter.KEYWORD_ONLY,
-            default=Depends(self._validate_token),
+            default=Depends(self._get_user_claims),
             annotation=UserClaims
         )
         endpoint_wrapper.__signature__ = signature(endpoint_wrapper).replace(parameters=list(parameters.values()))
 
         self.get_app().add_api_route(
-            path=details.path,
+            path=route_type.details.path,
             endpoint=endpoint_wrapper,
-            methods=[details.method]
+            methods=[route_type.details.method]
         )
-
-    #
-    # FastAPI specific
-    def _validate_token(self, credentials: HTTPBearerAuthorizationCredentials) -> UserClaims:
-        token = credentials.credentials if credentials else None
-        try:
-            user_claims = self._auth.get_user_claims(token)
-            return user_claims
-        except Exception as e:
-            raise HTTPException(status_code=401, detail=str(e))
 
     def get_app(self) -> FastAPI:
         if self._app is None:
             raise Exception("FastAPIHttp is not bootstrapped yet")
 
         return self._app
+
+    def _get_user_claims(self, credentials: HTTPBearerAuthorizationCredentials) -> UserClaims:
+        token = credentials.credentials if credentials else None
+        try:
+            user_claims = self._auth.get_user_claims(token)
+            return user_claims
+        except Exception as e:
+            raise HTTPException(status_code=401, detail=str(e))
