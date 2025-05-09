@@ -5,6 +5,7 @@ requires = [
   "cryptography",
   "dotenv",
   "fastapi",
+  "httpapifoundation@https://github.com/Frangitron/http-api-foundation",
   "pydantic",
   "pyjwt",
   "python-helpers@git+https://github.com/MrFrangipane/python-helpers",
