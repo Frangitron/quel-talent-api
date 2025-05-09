@@ -1,6 +1,6 @@
 import logging
 
-from queltalentapi.foundation.event_bus.abstract import AbstractEventBus
+from httpapifoundation.event_bus.abstract import AbstractEventBus
 
 
 _logger = logging.getLogger("EventBus")

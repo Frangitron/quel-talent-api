@@ -9,8 +9,8 @@ import jwt
 
 import requests
 
-from queltalentapi.foundation.authorization.abstract import AbstractAuthorization
-from queltalentapi.foundation.http.user_claims import UserClaims
+from httpapifoundation.authorization.abstract import AbstractAuthorization
+from httpapifoundation.http.user_claims import UserClaims
 
 
 class Auth0Authorization(AbstractAuthorization):

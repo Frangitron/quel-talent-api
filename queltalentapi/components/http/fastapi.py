@@ -9,12 +9,12 @@ from fastapi.exceptions import HTTPException
 from fastapi.params import Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-from queltalentapi.foundation.authorization.abstract import AbstractAuthorization
-from queltalentapi.foundation.http.abstract import AbstractHttp
-from queltalentapi.foundation.http.abstract_route import AbstractHttpRoute
-from queltalentapi.foundation.http.exception_handler import handle_exceptions
-from queltalentapi.foundation.http.user_claims import UserClaims
-from queltalentapi.foundation.injector import Injector
+from httpapifoundation.authorization.abstract import AbstractAuthorization
+from httpapifoundation.http.abstract import AbstractHttp
+from httpapifoundation.http.abstract_route import AbstractHttpRoute
+from httpapifoundation.http.exception_handler import handle_exceptions
+from httpapifoundation.http.user_claims import UserClaims
+from httpapifoundation.injector import Injector
 
 
 _logger = logging.getLogger(__name__)

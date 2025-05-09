@@ -1,8 +1,9 @@
+from httpapifoundation.http.abstract_route import AbstractHttpRoute
+from httpapifoundation.http.route_details import RouteDetails
+from httpapifoundation.http.method_enum import HttpMethod
+
 from queltalentapi.domain.project import project_api
 from queltalentapi.domain.project.models import ProjectModel, ProjectResponseModel
-from queltalentapi.foundation.http.abstract_route import AbstractHttpRoute
-from queltalentapi.foundation.http.method_enum import HttpMethod
-from queltalentapi.foundation.http.route_details import RouteDetails
 
 
 class ProjectCreateRoute(AbstractHttpRoute):

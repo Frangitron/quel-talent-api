@@ -1,6 +1,7 @@
+from httpapifoundation.exceptions import NotFoundError
+
 from queltalentapi.domain.project.database.abstract import AbstractProjectDatabase
 from queltalentapi.domain.project.models import ProjectModel, ProjectResponseModel
-from queltalentapi.foundation.exceptions import NotFoundError
 
 
 class RamProjectDatabase(AbstractProjectDatabase):

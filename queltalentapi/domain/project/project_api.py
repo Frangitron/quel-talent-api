@@ -1,8 +1,9 @@
+from httpapifoundation.event_bus.abstract import AbstractEventBus
+from httpapifoundation.event_bus.type_enum import EventBusEventType
+from httpapifoundation.injector import Injector
+
 from queltalentapi.domain.project.database.abstract import AbstractProjectDatabase
 from queltalentapi.domain.project.models import ProjectModel, ProjectResponseModel
-from queltalentapi.foundation.event_bus.abstract import AbstractEventBus
-from queltalentapi.foundation.event_bus.type_enum import EventBusEventType
-from queltalentapi.foundation.injector import Injector
 
 
 def create(project: ProjectModel) -> ProjectResponseModel:
