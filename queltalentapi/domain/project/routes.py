@@ -1,8 +1,8 @@
 from queltalentapi.domain.project import project_api
 from queltalentapi.domain.project.models import ProjectModel, ProjectResponseModel
 from queltalentapi.foundation.http.abstract_route import AbstractHttpRoute
+from queltalentapi.foundation.http.method_enum import HttpMethod
 from queltalentapi.foundation.http.route_details import RouteDetails
-from queltalentapi.foundation.http.methods import HttpMethods
 
 
 class ProjectCreateRoute(AbstractHttpRoute):
@@ -10,7 +10,7 @@ class ProjectCreateRoute(AbstractHttpRoute):
     Creates a new Project.
     """
     details = RouteDetails(
-        method=HttpMethods.POST,
+        method=HttpMethod.POST,
         name='Create',
         operation_id='projects_Create',
         path='/projects',
@@ -25,7 +25,7 @@ class ProjectDeleteRoute(AbstractHttpRoute):
     Deletes a Project.
     """
     details = RouteDetails(
-        method=HttpMethods.DELETE,
+        method=HttpMethod.DELETE,
         name='Delete',
         operation_id='projects_Delete',
         path='/projects/{index}',
@@ -40,7 +40,7 @@ class ProjectsAllRoute(AbstractHttpRoute):
     Gets all Projects.
     """
     details = RouteDetails(
-        method=HttpMethods.GET,
+        method=HttpMethod.GET,
         name='Get all',
         operation_id='projects_GetAll',
         path='/projects',
@@ -57,7 +57,7 @@ class ProjectByIdRoute(AbstractHttpRoute):
     - **id**: integer
     """
     details = RouteDetails(
-        method=HttpMethods.GET,
+        method=HttpMethod.GET,
         name='Get by id',
         operation_id='project_GetById',
         path='/projects/{index}',
@@ -72,7 +72,7 @@ class ProjectUpdateRoute(AbstractHttpRoute):
     Updates a Project.
     """
     details = RouteDetails(
-        method=HttpMethods.PUT,
+        method=HttpMethod.PUT,
         name='Update',
         operation_id='projects_Update',
         path='/projects',
