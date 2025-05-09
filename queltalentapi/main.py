@@ -4,9 +4,9 @@ logging.basicConfig(level=logging.INFO)
 from dotenv import load_dotenv
 load_dotenv('resources/.env')
 
-from queltalentapi.components.bootstrapper import Bootstrapper
 from queltalentapi.domain.project.database.abstract import AbstractProjectDatabase
 from queltalentapi.foundation.authorization.abstract import AbstractAuthorization
+from queltalentapi.foundation.bootstrapper import Bootstrapper
 from queltalentapi.foundation.http.abstract import AbstractHttp
 from queltalentapi.foundation.injector import Injector
 
@@ -15,12 +15,12 @@ def _register_dependencies():
     # from queltalentapi.components.authorization.auth0 import Auth0Authorization
     from queltalentapi.components.authorization.noauth import NoAuthorization
     from queltalentapi.components.http.fastapi import FastApiHttp
-    from queltalentapi.domain.project.database.alembic.implementation import AlembicProjectDatabase
+    from queltalentapi.components.database.ram.project_implementation import RamProjectDatabase
 
     Injector().set_dependencies({
         AbstractAuthorization: NoAuthorization(),
         AbstractHttp: FastApiHttp(),
-        AbstractProjectDatabase: AlembicProjectDatabase(),
+        AbstractProjectDatabase: RamProjectDatabase(),
     })
 
 

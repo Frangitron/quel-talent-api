@@ -12,6 +12,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from queltalentapi.foundation.authorization.abstract import AbstractAuthorization
 from queltalentapi.foundation.http.abstract import AbstractHttp
 from queltalentapi.foundation.http.abstract_route import AbstractHttpRoute
+from queltalentapi.foundation.http.exception_handler import handle_exceptions
 from queltalentapi.foundation.http.user_claims import UserClaims
 from queltalentapi.foundation.injector import Injector
 
@@ -37,15 +38,14 @@ class FastApiHttp(AbstractHttp):
         self._auth = Injector().inject(AbstractAuthorization)
 
     def register_route(self, route_type: Type[AbstractHttpRoute]):
-        route = route_type()
-        async def endpoint_wrapper(user_claims: UserClaims = Depends(self._get_user_claims), **kwargs):
-            route.user_claims = user_claims
-            try:
-                return await route.endpoint(**kwargs)
-            except Exception as e:
-                raise HTTPException(status_code=500, detail=str(e))
 
-        parameters = dict(signature(route.callback).parameters)
+        async def endpoint_wrapper(user_claims: UserClaims = Depends(self._get_user_claims), **kwargs):
+            route = route_type()
+            route.user_claims = user_claims
+            return await handle_exceptions(route.endpoint, **kwargs)
+
+        parameters = dict(signature(route_type.callback).parameters)
+        parameters.pop('self')
         parameters['user_claims'] = Parameter(
             'user_claims',
             Parameter.KEYWORD_ONLY,
@@ -53,11 +53,14 @@ class FastApiHttp(AbstractHttp):
             annotation=UserClaims
         )
         endpoint_wrapper.__signature__ = signature(endpoint_wrapper).replace(parameters=list(parameters.values()))
+        endpoint_wrapper.__doc__ = route_type.__doc__
 
         self.get_app().add_api_route(
-            path=route_type.details.path,
             endpoint=endpoint_wrapper,
-            methods=[route_type.details.method]
+            methods=[route_type.details.method.value],
+            name=route_type.details.name,
+            operation_id=route_type.details.operation_id,
+            path=route_type.details.path,
         )
 
     def get_app(self) -> FastAPI:
