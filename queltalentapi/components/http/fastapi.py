@@ -9,13 +9,13 @@ from fastapi.exceptions import HTTPException
 from fastapi.params import Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
+from pythonhelpers.injector import Injector
+
 from httpapifoundation.authorization.abstract import AbstractAuthorization
+from httpapifoundation.exceptions import NotFoundError
 from httpapifoundation.http.abstract import AbstractHttp
 from httpapifoundation.http.abstract_route import AbstractHttpRoute
-from httpapifoundation.http.exception_handler import handle_exceptions
 from httpapifoundation.http.user_claims import UserClaims
-from httpapifoundation.injector import Injector
-
 
 _logger = logging.getLogger(__name__)
 
@@ -42,7 +42,7 @@ class FastApiHttp(AbstractHttp):
         async def endpoint_wrapper(user_claims: UserClaims = Depends(self._get_user_claims), **kwargs):
             route = route_type()
             route.user_claims = user_claims
-            return await handle_exceptions(route.endpoint, **kwargs)
+            return await _handle_exceptions(route.endpoint, **kwargs)
 
         parameters = dict(signature(route_type.callback).parameters)
         parameters.pop('self')
@@ -76,3 +76,19 @@ class FastApiHttp(AbstractHttp):
             return user_claims
         except Exception as e:
             raise HTTPException(status_code=401, detail=str(e))
+
+
+async def _handle_exceptions(func, **kwargs):
+    """
+    Handles exceptions by converting them to HTTPExceptions.
+    """
+    try:
+        return await func(**kwargs)
+    except NotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        # FIXME create a provider for that
+        if os.environ.get("DEV"):
+            raise
+        else:
+            raise HTTPException(status_code=500)

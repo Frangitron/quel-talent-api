@@ -4,11 +4,12 @@ logging.basicConfig(level=logging.INFO)
 from dotenv import load_dotenv
 load_dotenv('resources/.env')
 
+from pythonhelpers.injector import Injector
+
 from httpapifoundation.authorization.abstract import AbstractAuthorization
 from httpapifoundation.bootstrapper import Bootstrapper
 from httpapifoundation.event_bus.abstract import AbstractEventBus
 from httpapifoundation.http.abstract import AbstractHttp
-from httpapifoundation.injector import Injector
 
 from queltalentapi.domain.project.database.abstract import AbstractProjectDatabase
 
